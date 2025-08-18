@@ -1,254 +1,366 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Quà 8/3 lớp 12A4 — Nhập tên để nhận lời chúc</title>
-  <meta name="description" content="Nhập tên + mật khẩu để mở trang chúc mừng cá nhân hoá." />
-  <style>
-    :root{
-      --bg:#0e1222; --card:#12182b; --muted:#9aa3b2; --brand:#ff6aa7; --text:#eaf1ff;
-      --radius:16px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; background: radial-gradient(1200px 600px at 10% 10%, #17203a 0%, #0e1222 48%, #0b0f1c 100%);
-      color:var(--text); font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue";
-      display:flex; align-items:center; justify-content:center; padding:24px;
-    }
-    .wrap{width:100%; max-width:900px}
-    header{margin-bottom:18px}
-    h1{margin:0; font-size:clamp(20px, 3.5vw, 28px)}
-    .lead{margin:6px 0 0; color:var(--muted); font-size:14px}
-    .card{background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.06);
-      border-radius: var(--radius); padding:18px; box-shadow: 0 20px 60px rgba(0,0,0,0.35)}
-    .row{display:grid; grid-template-columns: 1fr auto; gap:12px; align-items:center}
-    .field{display:flex; gap:10px; align-items:center}
-    label{font-size:13px; color:var(--muted)}
-    input[type="search"], input[type="password"]{
-      width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.06);
-      background:rgba(255,255,255,0.04); color:var(--text); outline:none; font-size:16px
-    }
-    .btn{padding:12px 16px; border-radius:12px; border:0; background: linear-gradient(90deg, var(--brand), #ff4c94);
-      color:#1a0f1d; font-weight:700; cursor:pointer}
-    .suggestions{margin-top:8px; display:grid; gap:6px}
-    .sug{padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.03); color:var(--muted); cursor:pointer}
-    .sug:hover{background:rgba(255,255,255,0.06); color:var(--text)}
-    .hidden{display:none !important}
-    .profile{margin-top:16px; display:none}
-    .profile.show{display:block}
-    .hero{display:flex; gap:16px; align-items:center; flex-wrap:wrap}
-    .badge{display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.06); color:var(--muted); font-size:12px}
-    .title{margin:0}
-    .videoBox{margin-top:12px; background:#0a0f1d; border-radius:14px; border:1px solid rgba(255,255,255,0.06); padding:10px}
-    video, iframe{width:100%; aspect-ratio:16/9; border:0; border-radius:10px}
-    .msg{margin-top:12px; color:var(--text); white-space:pre-line}
-    .note{margin-top:8px; color:var(--muted); font-size:13px}
-    footer{margin-top:14px; color:var(--muted); font-size:12px; text-align:center}
-    .mini{font-size:12px; color:var(--muted)}
-    .copyLink{margin-left:8px; font-size:12px; cursor:pointer; color:#ffd9ea; background:none; border:none; text-decoration:underline}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Quà 12A4 — Nhập tên để nhận lời chúc</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <h1>Quà dành riêng cho các bạn nữ 12A4 ✨</h1>
-      <p class="lead">Gõ <strong>tên</strong> của bạn + nhập <strong>mật khẩu chung</strong> để mở trang của riêng bạn.</p>
-    </header>
+<div class="wrap">
+  <header>
+    <h1>🎁 Quà bất ngờ cho các bạn nữ 12A4</h1>
+    <p class="lead">Nhập tên của bạn và mật khẩu chung để mở món quà riêng nhé.</p>
+  </header>
 
-    <main class="card">
-      <div class="row">
-        <div class="field">
-          <div style="flex:1">
-            <label for="name">Tên của bạn</label>
-            <input id="name" type="search" placeholder="Ví dụ: Nguyễn Thị Ánh / Anh" autocomplete="off" />
-          </div>
-          <div style="flex:1">
-            <label for="pass">Mật khẩu</label>
-            <input id="pass" type="password" placeholder="Nhập mật khẩu chung" />
-          </div>
-        </div>
-        <button id="btnGo" class="btn">Vào</button>
+  <main class="card">
+    <div class="form-row">
+      <input id="name" type="search" placeholder="Gõ tên (ví dụ: Nguyễn Ngọc Linh Giang)" autocomplete="off">
+      <input id="pass" type="password" placeholder="Mật khẩu chung">
+      <button id="btn" class="btn">Mở quà</button>
+    </div>
+    <div id="suggestions" class="suggestions"></div>
+
+    <section id="profile" class="profile hidden" aria-hidden="true">
+      <div class="profile-card">
+        <h2 id="pname"></h2>
+        <div id="poem" class="poem"></div>
+        <div id="videoBox" class="videoBox"></div>
+        <button id="copyLink" class="mini">Copy link cá nhân</button>
+        <div class="note">Mật khẩu chung là: <strong>Các bạn nam 12A4 đẹp trai</strong></div>
+        <a id="back" class="back">← Quay lại</a>
       </div>
-      <div id="suggestions" class="suggestions"></div>
+    </section>
+  </main>
 
-      <section id="profile" class="profile">
-        <div class="hero">
-          <div>
-            <div class="badge">Trang cá nhân</div>
-            <h2 id="displayName" class="title"></h2>
-            <button class="copyLink mini" id="copyLink" title="Copy link cá nhân">Copy link cá nhân</button>
-          </div>
-        </div>
+  <footer>Made with ❤️ — Lớp 12A4</footer>
+</div>
 
-        <div class="videoBox" id="videoBox"></div>
-        <div id="message" class="msg"></div>
-        <div class="note">Nếu video không chạy, kiểm tra đường link hoặc mạng. Với YouTube, nên để chế độ <em>Không công khai (Unlisted)</em>.</div>
-      </section>
-      <footer>Made with 💗 — 12A4</footer>
-    </main>
-  </div>
+<script>
+/* ====== CẤU HÌNH ====== */
+const PASSWORD = "Các bạn nam 12A4 đẹp trai";
 
-  <script>
-    // ======= CẤU HÌNH =======
-    const PASSWORD = "Các bạn nam 12A4 đẹp trai";
+const PROFILES = [
+  {
+    "id": "duong-linh-anh",
+    "name": "Dương Linh Anh",
+    "video": "",
+    "poem": "Anh ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Anh mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "nguyen-ngoc-linh-giang",
+    "name": "Nguyễn Ngọc Linh Giang",
+    "video": "",
+    "poem": "Giang ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Giang mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "nguyen-thanh-hang",
+    "name": "Nguyễn Thanh Hằng",
+    "video": "",
+    "poem": "Hằng ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Hằng mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "phan-thi-my-hanh",
+    "name": "Phan Thị Mỹ Hạnh",
+    "video": "",
+    "poem": "Hạnh ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Hạnh mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "phan-thi-thanh-huyen",
+    "name": "Phan Thị Thanh Huyền",
+    "video": "",
+    "poem": "Huyền ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Huyền mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "duong-thi-phuong-linh",
+    "name": "Dương Thị Phương Linh",
+    "video": "",
+    "poem": "Linh ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Linh mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "ha-thi-linh",
+    "name": "Hà Thi Linh",
+    "video": "",
+    "poem": "Linh ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Linh mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "hoang-ha-linh",
+    "name": "Hoàng Hà Linh",
+    "video": "",
+    "poem": "Linh ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Linh mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "nguyen-ngoc-khanh-ly",
+    "name": "Nguyễn Ngọc Khánh Ly",
+    "video": "",
+    "poem": "Ly ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Ly mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "duong-phan-thao-mi",
+    "name": "Dương Phan Thảo Mi",
+    "video": "",
+    "poem": "Mi ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Mi mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "pham-hoang-my",
+    "name": "Phạm Hoàng My",
+    "video": "",
+    "poem": "My ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc My mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "phan-thi-thuy-ngan",
+    "name": "Phan Thị Thùy Ngân",
+    "video": "",
+    "poem": "Ngân ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Ngân mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "duong-hoang-khanh-ngoc",
+    "name": "Dương Hoàng Khánh Ngọc",
+    "video": "",
+    "poem": "Ngọc ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Ngọc mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "nguyen-thanh-bao-ngoc",
+    "name": "Nguyễn Thanh Bảo Ngọc",
+    "video": "",
+    "poem": "Ngọc ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Ngọc mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "vu-nhu-ngoc",
+    "name": "Vũ Như Ngọc",
+    "video": "",
+    "poem": "Ngọc ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Ngọc mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "duong-thao-nguyen",
+    "name": "Dương Thảo Nguyên",
+    "video": "",
+    "poem": "Nguyên ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Nguyên mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "pham-thi-anh-nguyet",
+    "name": "Phạm Thị Anh Nguyệt",
+    "video": "",
+    "poem": "Nguyệt ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Nguyệt mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "pham-thi-thanh-nhan",
+    "name": "Phạm Thị Thanh Nhãn",
+    "video": "",
+    "poem": "Nhãn ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Nhãn mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "ho-thi-uyen-nhi",
+    "name": "Hồ Thị Uyển Nhi",
+    "video": "",
+    "poem": "Nhi ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Nhi mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "ton-nu-uyen-nhi",
+    "name": "Tôn Nữ Uyển Nhi",
+    "video": "",
+    "poem": "Nhi ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Nhi mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "tran-ngoc-yen-nhi",
+    "name": "Trần Ngọc Yến Nhi",
+    "video": "",
+    "poem": "Nhi ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Nhi mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "phan-thi-ha-ni",
+    "name": "Phan Thị Hà Ni",
+    "video": "",
+    "poem": "Ni ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Ni mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "nguyen-thi-kieu-oanh",
+    "name": "Nguyễn Thị Kiều Oanh",
+    "video": "",
+    "poem": "Oanh ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Oanh mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "nguyen-hong-phuong",
+    "name": "Nguyễn Hồng Phương",
+    "video": "",
+    "poem": "Phương ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Phương mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "le-thi-ngoc-tam",
+    "name": "Lê Thị Ngọc Tâm",
+    "video": "",
+    "poem": "Tâm ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Tâm mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "vo-thi-my-tam",
+    "name": "Võ Thị Mỹ Tâm",
+    "video": "",
+    "poem": "Tâm ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Tâm mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "nguyen-thi-hai-thuyet",
+    "name": "Nguyễn Thị Hải Thuyết",
+    "video": "",
+    "poem": "Thuyết ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Thuyết mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "phan-hoai-thuong",
+    "name": "Phan Hoài Thương",
+    "video": "",
+    "poem": "Thương ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Thương mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "le-thi-hoai-trang",
+    "name": "Lê Thị Hoài Trang",
+    "video": "",
+    "poem": "Trang ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Trang mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "nguyen-huyen-trang",
+    "name": "Nguyễn Huyền Trang",
+    "video": "",
+    "poem": "Trang ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Trang mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "nguyen-thi-cam-tu",
+    "name": "Nguyễn Thi Cẩm Tú",
+    "video": "",
+    "poem": "Tú ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Tú mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  },
+  {
+    "id": "nguyen-thanh-tam",
+    "name": "Nguyễn Thanh Tâm",
+    "video": "",
+    "poem": "Tâm ơi, nụ cười như nắng sớm,\nÁnh nhìn dịu dàng, xua tan mùa mưa.\nChúc Tâm mỗi ngày thêm rạng rỡ, ngập tràn yêu thương."
+  }
+];
 
-    // Dữ liệu mẫu: thêm 42 bạn ở đây.
-    // id: viết không dấu + gạch nối. name: tên hiển thị. video: link YouTube (chia sẻ) hoặc link file .mp4.
-    // message: lời chúc riêng.
-    const PROFILES = [
-      { id:"nguyen-thi-anh", name:"Nguyễn Thị Ánh", video:"https://youtu.be/dQw4w9WgXcQ", message:"Chúc Ánh luôn rực rỡ, học tốt và thật hạnh phúc nhé! 💖" },
-      { id:"le-thi-bich",    name:"Lê Thị Bích",    video:"videos/bich.mp4",              message:"Bích ơi, mong một ngày tràn tiếng cười và may mắn! 🌸" },
-      { id:"tran-thu-ha",    name:"Trần Thu Hà",    video:"https://youtu.be/aqz-KE-bpKQ", message:"Hà thật tuyệt! Chúc luôn mạnh mẽ, tự tin và toả sáng ✨" }
-      // Thêm 39 bạn nữa theo mẫu ↑
-    ];
+/* ====== HÀM TIỆN ÍCH ====== */
+function normalize(s){
+  if(!s) return "";
+  s = s.toLowerCase();
+  const map = {'à':'a','á':'a','ạ':'a','ả':'a','ã':'a','â':'a','ầ':'a','ấ':'a','ậ':'a','ẩ':'a','ẫ':'a','ă':'a','ằ':'a','ắ':'a','ặ':'a','ẳ':'a','ẵ':'a',
+               'è':'e','é':'e','ẹ':'e','ẻ':'e','ẽ':'e','ê':'e','ề':'e','ế':'e','ệ':'e','ể':'e','ễ':'e',
+               'ì':'i','í':'i','ị':'i','ỉ':'i','ĩ':'i',
+               'ò':'o','ó':'o','ọ':'o','ỏ':'o','õ':'o','ô':'o','ồ':'o','ố':'o','ộ':'o','ổ':'o','ỗ':'o','ơ':'o','ờ':'o','ớ':'o','ợ':'o','ở':'o','ỡ':'o',
+               'ù':'u','ú':'u','ụ':'u','ủ':'u','ũ':'u','ư':'u','ừ':'u','ứ':'u','ự':'u','ử':'u','ữ':'u',
+               'ỳ':'y','ý':'y','ỵ':'y','ỷ':'y','ỹ':'y','đ':'d'};
+  let out = "";
+  for(const ch of s) out += map[ch] || ch;
+  out = out.replace(/[^\w\s-]/g,"").replace(/\s+/g," ").trim();
+  return out;
+}
 
-    // ======= HÀM TIỆN ÍCH =======
-    function normalize(s){
-      if(!s) return "";
-      s = s.toLowerCase();
-      const map = {'à':'a','á':'a','ạ':'a','ả':'a','ã':'a','â':'a','ầ':'a','ấ':'a','ậ':'a','ẩ':'a','ẫ':'a','ă':'a','ằ':'a','ắ':'a','ặ':'a','ẳ':'a','ẵ':'a',
-                   'è':'e','é':'e','ẹ':'e','ẻ':'e','ẽ':'e','ê':'e','ề':'e','ế':'e','ệ':'e','ể':'e','ễ':'e',
-                   'ì':'i','í':'i','ị':'i','ỉ':'i','ĩ':'i',
-                   'ò':'o','ó':'o','ọ':'o','ỏ':'o','õ':'o','ô':'o','ồ':'o','ố':'o','ộ':'o','ổ':'o','ỗ':'o','ơ':'o','ờ':'o','ớ':'o','ợ':'o','ở':'o','ỡ':'o',
-                   'ù':'u','ú':'u','ụ':'u','ủ':'u','ũ':'u','ư':'u','ừ':'u','ứ':'u','ự':'u','ử':'u','ữ':'u',
-                   'ỳ':'y','ý':'y','ỵ':'y','ỷ':'y','ỹ':'y','đ':'d'};
-      let out = "";
-      for(const ch of s) out += map[ch] || ch;
-      out = out.replace(/[^\w\s-]/g,"").replace(/\s+/g," ").trim();
-      return out;
+function buildLookup(){
+  return PROFILES.map(p => ({...p, norm: normalize(p.name), idNorm: normalize(p.id || p.name.replace(/\s+/g,'-'))}));
+}
+
+const lookup = buildLookup();
+
+function renderSuggestions(q){
+  const el = document.getElementById('suggestions');
+  el.innerHTML = "";
+  if(!q) return;
+  const nq = normalize(q);
+  const matched = lookup.filter(p => p.norm.includes(nq) || p.idNorm.includes(nq)).slice(0,8);
+  if(matched.length===0){
+    el.innerHTML = "<div class='sug'>Không tìm thấy. Thử gõ không dấu hoặc một phần tên.</div>";
+    return;
+  }
+  for(const p of matched){
+    const d = document.createElement('div');
+    d.className='sug';
+    d.textContent = p.name;
+    d.onclick = ()=>{ document.getElementById('name').value = p.name; el.innerHTML=''; };
+    el.appendChild(d);
+  }
+}
+
+/* ====== DOM ====== */
+const nameInput = document.getElementById('name');
+const passInput = document.getElementById('pass');
+const btn = document.getElementById('btn');
+const profile = document.getElementById('profile');
+const pname = document.getElementById('pname');
+const poemEl = document.getElementById('poem');
+const videoBox = document.getElementById('videoBox');
+const copyBtn = document.getElementById('copyLink');
+const back = document.getElementById('back');
+
+nameInput.addEventListener('input', e=> renderSuggestions(e.target.value));
+nameInput.addEventListener('keydown', e=> { if(e.key==='Enter') passInput.focus(); });
+passInput.addEventListener('keydown', e=> { if(e.key==='Enter') doOpen(); });
+btn.addEventListener('click', doOpen);
+
+function findUserByName(q){
+  const nq = normalize(q);
+  return lookup.find(p => p.norm === nq) || lookup.find(p => p.norm.includes(nq)) || lookup.find(p => p.idNorm === nq.replace(/\s+/g,'-'));
+}
+
+function doOpen(){
+  const nameQ = nameInput.value.trim();
+  const passQ = passInput.value.trim();
+  if(!nameQ){ alert("Nhập tên đi nhé."); nameInput.focus(); return; }
+  if(!passQ){ alert("Nhập mật khẩu chung."); passInput.focus(); return; }
+  if(normalize(passQ) !== normalize(PASSWORD)){ alert("Sai mật khẩu chung. Gợi ý: Các bạn nam 12A4 đẹp trai"); passInput.focus(); return; }
+  const user = findUserByName(nameQ);
+  if(!user){ alert("Không tìm thấy tên. Thử gõ không dấu hoặc một phần tên."); return; }
+  openProfile(user);
+}
+
+function openProfile(user){
+  pname.textContent = user.name;
+  poemEl.innerHTML = "<pre>"+(user.poem || "")+"</pre>";
+  videoBox.innerHTML = "";
+  if(user.video){
+    // simple detection for youtube
+    const y = user.video.match(/(youtu\.be\/|v=|\/shorts\/)([A-Za-z0-9_-]{4,})/);
+    if(y){
+      // embed id
+      const id = user.video.includes('youtu') ? (user.video.includes('v=') ? (new URL(user.video).searchParams.get('v')) : user.video.split('/').pop()) : null;
+      const src = id ? ("https://www.youtube.com/embed/"+id) : user.video;
+      const iframe = document.createElement('iframe');
+      iframe.src = src; iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"; iframe.allowFullscreen = true;
+      videoBox.appendChild(iframe);
+    } else {
+      const v = document.createElement('video'); v.controls = true;
+      const s = document.createElement('source'); s.src = user.video; s.type = "video/mp4";
+      v.appendChild(s); videoBox.appendChild(v);
     }
+  }
+  profile.classList.remove('hidden');
+  profile.setAttribute('aria-hidden','false');
+  // set hash for sharing
+  location.hash = user.id;
+  // hide form area visually (optional)
+  // document.querySelector('.form-row').classList.add('hidden');
+}
 
-    function isYouTube(url){
-      return /youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/shorts\//i.test(url);
-    }
-    function toYouTubeEmbed(url){
-      try{
-        // handle youtu.be/xxxx, youtube.com/watch?v=xxxx, /shorts/xxxx
-        let id = null;
-        if(url.includes("youtu.be/")){
-          id = url.split("youtu.be/")[1].split(/[?&]/)[0];
-        }else if(url.includes("/watch")){
-          const u = new URL(url);
-          id = u.searchParams.get("v");
-        }else if(url.includes("/shorts/")){
-          id = url.split("/shorts/")[1].split(/[?&]/)[0];
-        }
-        return id ? `https://www.youtube.com/embed/${id}` : url;
-      }catch(e){ return url; }
-    }
+copyBtn.addEventListener('click', async ()=>{
+  const id = location.hash.replace('#','') || normalize(nameInput.value).replace(/\s+/g,'-');
+  const url = location.origin + location.pathname + "#" + id;
+  try{
+    await navigator.clipboard.writeText(url);
+    copyBtn.textContent = "Đã copy ✓";
+    setTimeout(()=> copyBtn.textContent = "Copy link cá nhân", 1500);
+  }catch(e){
+    alert("Không copy được tự động, mày copy thủ công link trên thanh địa chỉ nhé.");
+  }
+});
 
-    // Xây dựng bảng tra cứu
-    const lookup = PROFILES.map(p => ({...p, norm: normalize(p.name)}));
+back.addEventListener('click', ()=>{
+  profile.classList.add('hidden');
+  profile.setAttribute('aria-hidden','true');
+  location.hash = "";
+});
 
-    // ======= DOM =======
-    const nameInput = document.getElementById('name');
-    const passInput = document.getElementById('pass');
-    const btnGo = document.getElementById('btnGo');
-    const suggestions = document.getElementById('suggestions');
-    const profile = document.getElementById('profile');
-    const displayName = document.getElementById('displayName');
-    const videoBox = document.getElementById('videoBox');
-    const messageEl = document.getElementById('message');
-    const copyBtn = document.getElementById('copyLink');
-
-    // ======= LOGIC GỢI Ý =======
-    function renderSuggestions(q){
-      suggestions.innerHTML = "";
-      if(!q) return;
-      const nq = normalize(q);
-      const matched = lookup.filter(p => p.norm.includes(nq) || p.id.includes(nq)).slice(0,8);
-      if(matched.length === 0){
-        const d = document.createElement('div');
-        d.className = 'sug'; d.textContent = "Không tìm thấy — thử gõ không dấu hoặc một phần tên.";
-        suggestions.appendChild(d);
-        return;
-      }
-      for(const p of matched){
-        const d = document.createElement('div');
-        d.className = 'sug'; d.textContent = p.name;
-        d.onclick = () => { nameInput.value = p.name; suggestions.innerHTML=""; };
-        suggestions.appendChild(d);
-      }
-    }
-    nameInput.addEventListener('input', e => renderSuggestions(e.target.value));
-    nameInput.addEventListener('keydown', e => { if(e.key === 'Enter') passInput.focus(); });
-    passInput.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
-    btnGo.addEventListener('click', doLogin);
-
-    // ======= XỬ LÝ ĐĂNG NHẬP =======
-    function doLogin(){
-      const nameQ = nameInput.value.trim();
-      const passQ = passInput.value.trim();
-      if(!nameQ){ alert("Nhập tên trước nha."); nameInput.focus(); return; }
-      if(!passQ){ alert("Nhập mật khẩu chung nha."); passInput.focus(); return; }
-
-      // tìm profile
-      const nq = normalize(nameQ);
-      const user = lookup.find(p => p.norm === nq) || lookup.find(p => p.norm.includes(nq)) || lookup.find(p => p.id === nq.replace(/\s+/g,"-"));
-      if(!user){ alert("Chưa thấy tên phù hợp. Thử gõ không dấu, hoặc một phần tên."); return; }
-
-      // kiểm tra mật khẩu (không phân biệt hoa/thường, bỏ dấu)
-      if(normalize(passQ) !== normalize(PASSWORD)){
-        alert("Sai mật khẩu chung rồi :(\nGợi ý: 'Các bạn nam 12A4 đẹp trai'");
-        passInput.focus();
-        return;
-      }
-
-      openProfile(user);
-    }
-
-    function openProfile(user){
-      // hiển thị
-      displayName.textContent = user.name;
-      messageEl.textContent = user.message || "";
-
-      // video
-      videoBox.innerHTML = "";
-      if(isYouTube(user.video)){
-        const src = toYouTubeEmbed(user.video);
-        const ifr = document.createElement('iframe');
-        ifr.src = src; ifr.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-        ifr.allowFullscreen = true;
-        videoBox.appendChild(ifr);
-      }else{
-        const v = document.createElement('video');
-        v.controls = true;
-        const src = document.createElement('source');
-        src.src = user.video;
-        src.type = "video/mp4";
-        v.appendChild(src);
-        videoBox.appendChild(v);
-      }
-
-      profile.classList.add('show');
-      // cập nhật hash để tạo link cá nhân
-      location.hash = user.id;
-    }
-
-    // Copy link cá nhân
-    copyBtn.addEventListener('click', async () => {
-      try{
-        const url = location.origin + location.pathname + "#" + (location.hash ? location.hash.replace("#","") : normalize(nameInput.value).replace(/\s+/g,"-"));
-        await navigator.clipboard.writeText(url);
-        copyBtn.textContent = "Đã copy ✔";
-        setTimeout(()=> copyBtn.textContent = "Copy link cá nhân", 1500);
-      }catch(e){
-        alert("Không copy được, mày tự giữ link trên thanh địa chỉ nhé.");
-      }
-    });
-
-    // Nếu có hash trên URL (#id) thì tự điền tên tương ứng
-    window.addEventListener('load', () => {
-      const hash = location.hash.replace("#","");
-      if(!hash) return;
-      const user = lookup.find(p => p.id === hash);
-      if(user){
-        nameInput.value = user.name;
-        renderSuggestions(user.name);
-      }
-    });
-  </script>
+// If loaded with #id, prefill name input
+window.addEventListener('load', ()=>{
+  const h = location.hash.replace('#','');
+  if(!h) return;
+  const u = lookup.find(x=> x.id===h || x.idNorm===h);
+  if(u){ nameInput.value = u.name; renderSuggestions(u.name); }
+});
+</script>
 </body>
 </html>
