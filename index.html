@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quà 8/3 lớp 12A4 — Nhập tên để nhận lời chúc</title>
+  <meta name="description" content="Nhập tên + mật khẩu để mở trang chúc mừng cá nhân hoá." />
+  <style>
+    :root{
+      --bg:#0e1222; --card:#12182b; --muted:#9aa3b2; --brand:#ff6aa7; --text:#eaf1ff;
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background: radial-gradient(1200px 600px at 10% 10%, #17203a 0%, #0e1222 48%, #0b0f1c 100%);
+      color:var(--text); font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Helvetica Neue";
+      display:flex; align-items:center; justify-content:center; padding:24px;
+    }
+    .wrap{width:100%; max-width:900px}
+    header{margin-bottom:18px}
+    h1{margin:0; font-size:clamp(20px, 3.5vw, 28px)}
+    .lead{margin:6px 0 0; color:var(--muted); font-size:14px}
+    .card{background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius); padding:18px; box-shadow: 0 20px 60px rgba(0,0,0,0.35)}
+    .row{display:grid; grid-template-columns: 1fr auto; gap:12px; align-items:center}
+    .field{display:flex; gap:10px; align-items:center}
+    label{font-size:13px; color:var(--muted)}
+    input[type="search"], input[type="password"]{
+      width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,0.06);
+      background:rgba(255,255,255,0.04); color:var(--text); outline:none; font-size:16px
+    }
+    .btn{padding:12px 16px; border-radius:12px; border:0; background: linear-gradient(90deg, var(--brand), #ff4c94);
+      color:#1a0f1d; font-weight:700; cursor:pointer}
+    .suggestions{margin-top:8px; display:grid; gap:6px}
+    .sug{padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.03); color:var(--muted); cursor:pointer}
+    .sug:hover{background:rgba(255,255,255,0.06); color:var(--text)}
+    .hidden{display:none !important}
+    .profile{margin-top:16px; display:none}
+    .profile.show{display:block}
+    .hero{display:flex; gap:16px; align-items:center; flex-wrap:wrap}
+    .badge{display:inline-block; padding:6px 10px; border-radius:999px; background:rgba(255,255,255,0.06); color:var(--muted); font-size:12px}
+    .title{margin:0}
+    .videoBox{margin-top:12px; background:#0a0f1d; border-radius:14px; border:1px solid rgba(255,255,255,0.06); padding:10px}
+    video, iframe{width:100%; aspect-ratio:16/9; border:0; border-radius:10px}
+    .msg{margin-top:12px; color:var(--text); white-space:pre-line}
+    .note{margin-top:8px; color:var(--muted); font-size:13px}
+    footer{margin-top:14px; color:var(--muted); font-size:12px; text-align:center}
+    .mini{font-size:12px; color:var(--muted)}
+    .copyLink{margin-left:8px; font-size:12px; cursor:pointer; color:#ffd9ea; background:none; border:none; text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Quà dành riêng cho các bạn nữ 12A4 ✨</h1>
+      <p class="lead">Gõ <strong>tên</strong> của bạn + nhập <strong>mật khẩu chung</strong> để mở trang của riêng bạn.</p>
+    </header>
+
+    <main class="card">
+      <div class="row">
+        <div class="field">
+          <div style="flex:1">
+            <label for="name">Tên của bạn</label>
+            <input id="name" type="search" placeholder="Ví dụ: Nguyễn Thị Ánh / Anh" autocomplete="off" />
+          </div>
+          <div style="flex:1">
+            <label for="pass">Mật khẩu</label>
+            <input id="pass" type="password" placeholder="Nhập mật khẩu chung" />
+          </div>
+        </div>
+        <button id="btnGo" class="btn">Vào</button>
+      </div>
+      <div id="suggestions" class="suggestions"></div>
+
+      <section id="profile" class="profile">
+        <div class="hero">
+          <div>
+            <div class="badge">Trang cá nhân</div>
+            <h2 id="displayName" class="title"></h2>
+            <button class="copyLink mini" id="copyLink" title="Copy link cá nhân">Copy link cá nhân</button>
+          </div>
+        </div>
+
+        <div class="videoBox" id="videoBox"></div>
+        <div id="message" class="msg"></div>
+        <div class="note">Nếu video không chạy, kiểm tra đường link hoặc mạng. Với YouTube, nên để chế độ <em>Không công khai (Unlisted)</em>.</div>
+      </section>
+      <footer>Made with 💗 — 12A4</footer>
+    </main>
+  </div>
+
+  <script>
+    // ======= CẤU HÌNH =======
+    const PASSWORD = "Các bạn nam 12A4 đẹp trai";
+
+    // Dữ liệu mẫu: thêm 42 bạn ở đây.
+    // id: viết không dấu + gạch nối. name: tên hiển thị. video: link YouTube (chia sẻ) hoặc link file .mp4.
+    // message: lời chúc riêng.
+    const PROFILES = [
+      { id:"nguyen-thi-anh", name:"Nguyễn Thị Ánh", video:"https://youtu.be/dQw4w9WgXcQ", message:"Chúc Ánh luôn rực rỡ, học tốt và thật hạnh phúc nhé! 💖" },
+      { id:"le-thi-bich",    name:"Lê Thị Bích",    video:"videos/bich.mp4",              message:"Bích ơi, mong một ngày tràn tiếng cười và may mắn! 🌸" },
+      { id:"tran-thu-ha",    name:"Trần Thu Hà",    video:"https://youtu.be/aqz-KE-bpKQ", message:"Hà thật tuyệt! Chúc luôn mạnh mẽ, tự tin và toả sáng ✨" }
+      // Thêm 39 bạn nữa theo mẫu ↑
+    ];
+
+    // ======= HÀM TIỆN ÍCH =======
+    function normalize(s){
+      if(!s) return "";
+      s = s.toLowerCase();
+      const map = {'à':'a','á':'a','ạ':'a','ả':'a','ã':'a','â':'a','ầ':'a','ấ':'a','ậ':'a','ẩ':'a','ẫ':'a','ă':'a','ằ':'a','ắ':'a','ặ':'a','ẳ':'a','ẵ':'a',
+                   'è':'e','é':'e','ẹ':'e','ẻ':'e','ẽ':'e','ê':'e','ề':'e','ế':'e','ệ':'e','ể':'e','ễ':'e',
+                   'ì':'i','í':'i','ị':'i','ỉ':'i','ĩ':'i',
+                   'ò':'o','ó':'o','ọ':'o','ỏ':'o','õ':'o','ô':'o','ồ':'o','ố':'o','ộ':'o','ổ':'o','ỗ':'o','ơ':'o','ờ':'o','ớ':'o','ợ':'o','ở':'o','ỡ':'o',
+                   'ù':'u','ú':'u','ụ':'u','ủ':'u','ũ':'u','ư':'u','ừ':'u','ứ':'u','ự':'u','ử':'u','ữ':'u',
+                   'ỳ':'y','ý':'y','ỵ':'y','ỷ':'y','ỹ':'y','đ':'d'};
+      let out = "";
+      for(const ch of s) out += map[ch] || ch;
+      out = out.replace(/[^\w\s-]/g,"").replace(/\s+/g," ").trim();
+      return out;
+    }
+
+    function isYouTube(url){
+      return /youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/shorts\//i.test(url);
+    }
+    function toYouTubeEmbed(url){
+      try{
+        // handle youtu.be/xxxx, youtube.com/watch?v=xxxx, /shorts/xxxx
+        let id = null;
+        if(url.includes("youtu.be/")){
+          id = url.split("youtu.be/")[1].split(/[?&]/)[0];
+        }else if(url.includes("/watch")){
+          const u = new URL(url);
+          id = u.searchParams.get("v");
+        }else if(url.includes("/shorts/")){
+          id = url.split("/shorts/")[1].split(/[?&]/)[0];
+        }
+        return id ? `https://www.youtube.com/embed/${id}` : url;
+      }catch(e){ return url; }
+    }
+
+    // Xây dựng bảng tra cứu
+    const lookup = PROFILES.map(p => ({...p, norm: normalize(p.name)}));
+
+    // ======= DOM =======
+    const nameInput = document.getElementById('name');
+    const passInput = document.getElementById('pass');
+    const btnGo = document.getElementById('btnGo');
+    const suggestions = document.getElementById('suggestions');
+    const profile = document.getElementById('profile');
+    const displayName = document.getElementById('displayName');
+    const videoBox = document.getElementById('videoBox');
+    const messageEl = document.getElementById('message');
+    const copyBtn = document.getElementById('copyLink');
+
+    // ======= LOGIC GỢI Ý =======
+    function renderSuggestions(q){
+      suggestions.innerHTML = "";
+      if(!q) return;
+      const nq = normalize(q);
+      const matched = lookup.filter(p => p.norm.includes(nq) || p.id.includes(nq)).slice(0,8);
+      if(matched.length === 0){
+        const d = document.createElement('div');
+        d.className = 'sug'; d.textContent = "Không tìm thấy — thử gõ không dấu hoặc một phần tên.";
+        suggestions.appendChild(d);
+        return;
+      }
+      for(const p of matched){
+        const d = document.createElement('div');
+        d.className = 'sug'; d.textContent = p.name;
+        d.onclick = () => { nameInput.value = p.name; suggestions.innerHTML=""; };
+        suggestions.appendChild(d);
+      }
+    }
+    nameInput.addEventListener('input', e => renderSuggestions(e.target.value));
+    nameInput.addEventListener('keydown', e => { if(e.key === 'Enter') passInput.focus(); });
+    passInput.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+    btnGo.addEventListener('click', doLogin);
+
+    // ======= XỬ LÝ ĐĂNG NHẬP =======
+    function doLogin(){
+      const nameQ = nameInput.value.trim();
+      const passQ = passInput.value.trim();
+      if(!nameQ){ alert("Nhập tên trước nha."); nameInput.focus(); return; }
+      if(!passQ){ alert("Nhập mật khẩu chung nha."); passInput.focus(); return; }
+
+      // tìm profile
+      const nq = normalize(nameQ);
+      const user = lookup.find(p => p.norm === nq) || lookup.find(p => p.norm.includes(nq)) || lookup.find(p => p.id === nq.replace(/\s+/g,"-"));
+      if(!user){ alert("Chưa thấy tên phù hợp. Thử gõ không dấu, hoặc một phần tên."); return; }
+
+      // kiểm tra mật khẩu (không phân biệt hoa/thường, bỏ dấu)
+      if(normalize(passQ) !== normalize(PASSWORD)){
+        alert("Sai mật khẩu chung rồi :(\nGợi ý: 'Các bạn nam 12A4 đẹp trai'");
+        passInput.focus();
+        return;
+      }
+
+      openProfile(user);
+    }
+
+    function openProfile(user){
+      // hiển thị
+      displayName.textContent = user.name;
+      messageEl.textContent = user.message || "";
+
+      // video
+      videoBox.innerHTML = "";
+      if(isYouTube(user.video)){
+        const src = toYouTubeEmbed(user.video);
+        const ifr = document.createElement('iframe');
+        ifr.src = src; ifr.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        ifr.allowFullscreen = true;
+        videoBox.appendChild(ifr);
+      }else{
+        const v = document.createElement('video');
+        v.controls = true;
+        const src = document.createElement('source');
+        src.src = user.video;
+        src.type = "video/mp4";
+        v.appendChild(src);
+        videoBox.appendChild(v);
+      }
+
+      profile.classList.add('show');
+      // cập nhật hash để tạo link cá nhân
+      location.hash = user.id;
+    }
+
+    // Copy link cá nhân
+    copyBtn.addEventListener('click', async () => {
+      try{
+        const url = location.origin + location.pathname + "#" + (location.hash ? location.hash.replace("#","") : normalize(nameInput.value).replace(/\s+/g,"-"));
+        await navigator.clipboard.writeText(url);
+        copyBtn.textContent = "Đã copy ✔";
+        setTimeout(()=> copyBtn.textContent = "Copy link cá nhân", 1500);
+      }catch(e){
+        alert("Không copy được, mày tự giữ link trên thanh địa chỉ nhé.");
+      }
+    });
+
+    // Nếu có hash trên URL (#id) thì tự điền tên tương ứng
+    window.addEventListener('load', () => {
+      const hash = location.hash.replace("#","");
+      if(!hash) return;
+      const user = lookup.find(p => p.id === hash);
+      if(user){
+        nameInput.value = user.name;
+        renderSuggestions(user.name);
+      }
+    });
+  </script>
+</body>
+</html>
